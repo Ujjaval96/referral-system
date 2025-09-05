@@ -3,7 +3,7 @@ import { Transaction as SequelizeTransaction } from "sequelize";
 import UserModel from './userModel';
 const userModel: UserModel = new UserModel();
 import { isValidEmail, isStrongPassword } from "../../utils/validate";
-import sequelize from "../../db"; // your sequelize instance
+import sequelize from "../../db"; 
 // import User from "../../models/User";
 // import Wallet from "../models/Wallet";
 // import Transaction from "../models/Transaction";

@@ -61,10 +61,11 @@ const User = sequelize.define<UserInstance>(
       },
     },
     path: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      field: "path",
-    },
+  type: DataTypes.STRING,
+  allowNull: false,
+  field: "path",
+},
+
     referredBy: {
       type: DataTypes.INTEGER,
       allowNull: true,

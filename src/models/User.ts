@@ -1,6 +1,6 @@
 /* eslint-disable quotes */
 import { Model, DataTypes } from "sequelize";
-import sequelize from "../db";  
+import sequelize from "../db";
 import responses from "../responses";
 
 export type UserAttributes = {
@@ -8,19 +8,22 @@ export type UserAttributes = {
   name: string;
   email: string;
   password: string;
-  path: string;              // referral tree path (ltree-like, e.g., "1.2.3")
-  referredBy?: number | null; // Can be number, null, or undefined
+  path: string;
+  phoneNumber?: string | null;
+  twoFASecret?: string | null;
+  is2FAVerified: boolean;
+  referredBy?: number | null;
+  referredCode: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
-
 
 export type UserCreationAttributes = Partial<UserAttributes> &
   Pick<UserAttributes, "email" | "password">;
 
 export interface UserInstance
   extends Model<UserAttributes, UserCreationAttributes>,
-    UserAttributes {}
+  UserAttributes { }
 
 const User = sequelize.define<UserInstance>(
   "user",
@@ -61,10 +64,32 @@ const User = sequelize.define<UserInstance>(
       },
     },
     path: {
-  type: DataTypes.STRING,
-  allowNull: false,
-  field: "path",
-},
+      type: DataTypes.STRING,
+      allowNull: false,
+      field: "path",
+    },
+    phoneNumber: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: "phone_number",
+      validate: {
+        is: {
+          args: /^[0-9+\-() ]{7,20}$/i,
+          msg: "Invalid phone number format",
+        },
+      },
+    },
+    twoFASecret: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: "twofa_secret",
+    },
+    is2FAVerified: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "is_2fa_verified",
+    },
 
     referredBy: {
       type: DataTypes.INTEGER,
@@ -74,6 +99,12 @@ const User = sequelize.define<UserInstance>(
         model: "users",
         key: "id",
       },
+    },
+    referredCode: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      field: "referred_code",
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -85,6 +116,7 @@ const User = sequelize.define<UserInstance>(
       field: "updated_at",
       defaultValue: DataTypes.NOW,
     },
+
   },
   {
     tableName: "users",

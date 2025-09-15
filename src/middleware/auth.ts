@@ -1,7 +1,5 @@
-/* eslint-disable quotes */
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { JwtAuthPayload } from "../utils/types";
 
 const JWT_SECRET = process.env.JWT_SECRET || "mysecret123";
 
@@ -19,16 +17,19 @@ export const authenticateJWT = (
   const token = authHeader.split(" ")[1];
 
   try {
-    // Decode token (payload contains `id` and `path`)
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: number; path: string };
-
-    // ✅ Remap keys so they match JwtAuthPayload (_uid, _path)
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      id: number;
+      email: string;
+      path: string;
+    };
+    console.log(req.body);
     req.body = {
       ...req.body,
-      _uid: decoded.id,
-      _path: decoded.path,
+      id: decoded.id,
+      email: decoded.email,
+      path: decoded.path,
     };
-
+    console.log(req.body);
     next();
   } catch (err) {
     return res.status(403).json({ message: "Invalid or expired token" });

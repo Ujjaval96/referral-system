@@ -1,5 +1,6 @@
 export interface JwtAuthPayload
 {
-  _uid: number;
-  _path: string;
+  id: number;
+  email:string;
+  path: string;
 }

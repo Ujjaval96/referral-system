@@ -1,6 +1,7 @@
 import User from "./User";
 import Wallet from "./Wallet";
 import Transaction from "./Transaction";
+import Otp from "./Otp";
 
 // User ↔ Wallet (1:1)
 User.hasOne(Wallet, { foreignKey: "userId", as: "wallet" });
@@ -14,4 +15,4 @@ Transaction.belongsTo(User, { foreignKey: "userId", as: "user" });
 Wallet.hasMany(Transaction, { foreignKey: "walletId", as: "transactions" });
 Transaction.belongsTo(Wallet, { foreignKey: "walletId", as: "wallet" });
 // 
-export { User, Wallet, Transaction };
+export { User, Wallet, Transaction,Otp };
